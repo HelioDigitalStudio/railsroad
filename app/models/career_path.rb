@@ -1,0 +1,2 @@
+class CareerPath < ApplicationRecord
+end
