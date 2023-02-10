@@ -1,6 +1,25 @@
 .alert {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-  z-index: 1000;
+  // position: fixed;
+  // bottom: 16px;
+  // right: 16px;
+  // z-index: 1000;
+  border-radius: 10px;
+  margin: 30px 0px;
+  padding: 25px 10px; 
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  align-items: center;
+}
+
+.success {
+  border: solid rgb(5, 218, 5) 2px;
+}
+
+.error {
+  border: solid rgb(218, 5, 5) 2px;
+}
+
+.warning {
+  border: solid rgb(51, 116, 255) 2px;
 }
