@@ -10,11 +10,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_02_150418) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_14_093418) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "career_paths", force: :cascade do |t|
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "careers", force: :cascade do |t|
     t.string "title"
     t.text "summary"
     t.datetime "created_at", null: false
@@ -24,20 +52,30 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_02_150418) do
   create_table "milestones", force: :cascade do |t|
     t.string "title"
     t.text "content"
-    t.bigint "career_paths_id", null: false
+    t.bigint "career_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["career_paths_id"], name: "index_milestones_on_career_paths_id"
+    t.index ["career_id"], name: "index_milestones_on_career_id"
   end
 
-  create_table "user_milestones", force: :cascade do |t|
-    t.bigint "users_id", null: false
-    t.bigint "milestones_id", null: false
+  create_table "user_careers", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "career_id", null: false
     t.date "completed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["milestones_id"], name: "index_user_milestones_on_milestones_id"
-    t.index ["users_id"], name: "index_user_milestones_on_users_id"
+    t.index ["career_id"], name: "index_user_careers_on_career_id"
+    t.index ["user_id"], name: "index_user_careers_on_user_id"
+  end
+
+  create_table "user_milestones", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "milestone_id", null: false
+    t.date "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["milestone_id"], name: "index_user_milestones_on_milestone_id"
+    t.index ["user_id"], name: "index_user_milestones_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -52,19 +90,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_02_150418) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "users_careers_paths", force: :cascade do |t|
-    t.bigint "users_id", null: false
-    t.bigint "career_paths_id", null: false
-    t.date "completed_date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["career_paths_id"], name: "index_users_careers_paths_on_career_paths_id"
-    t.index ["users_id"], name: "index_users_careers_paths_on_users_id"
-  end
-
-  add_foreign_key "milestones", "career_paths", column: "career_paths_id"
-  add_foreign_key "user_milestones", "milestones", column: "milestones_id"
-  add_foreign_key "user_milestones", "users", column: "users_id"
-  add_foreign_key "users_careers_paths", "career_paths", column: "career_paths_id"
-  add_foreign_key "users_careers_paths", "users", column: "users_id"
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "milestones", "careers"
+  add_foreign_key "user_careers", "careers"
+  add_foreign_key "user_careers", "users"
+  add_foreign_key "user_milestones", "milestones"
+  add_foreign_key "user_milestones", "users"
 end

@@ -1,6 +1,6 @@
-class CreateCareerPaths < ActiveRecord::Migration[7.0]
+class CreateCareer < ActiveRecord::Migration[7.0]
   def change
-    create_table :career_paths do |t|
+    create_table :careers do |t|
       t.string :title
       t.text :summary
 

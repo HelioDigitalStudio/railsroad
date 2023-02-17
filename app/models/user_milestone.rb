@@ -1,4 +1,4 @@
 class UserMilestone < ApplicationRecord
-  belongs_to :users
-  belongs_to :milestones
+  belongs_to :user
+  belongs_to :milestone
 end
